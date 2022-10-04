@@ -1,5 +1,6 @@
 from http.client import HTTPException
 from operator import contains
+from pyexpat import model
 from turtle import title
 from typing import List, Optional
 from .. import database, models, schemas, oauth2
@@ -39,6 +40,20 @@ def delete_note(id:int, db:Session = Depends(database.get_db), current_user:int 
     note_query.delete(synchronize_session=False)
     db.commit()
     return {"message":"note successfull deleted"}
+
+@router.put("/{id}", response_model=schemas.Note)
+def update_note(id:int, note:schemas.NoteCreate,db:Session = Depends(database.get_db), current_user: int = Depends(oauth2.get_current_user)):
+    note_query = db.query(models.Note).filter(models.Note.id == id)
+    note_to_update = note_query.first()
+    if not note_to_update:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f" note with id {id} does not exist")
+    if note_to_update.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail=f"unauthorized access")
+    
+    note_query.update(note.dict(), synchronize_session=False)
+    db.commit()
+    return note_query.first()
+
 
 
 
