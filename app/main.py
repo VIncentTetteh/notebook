@@ -6,7 +6,7 @@ from .database import engine
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(title="Notebook App", version=0.1)
 
 app.include_router(user.router)
 app.include_router(auth.router)
