@@ -1,19 +1,22 @@
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 
+
 class User(BaseModel):
     id: int
-    email:EmailStr
+    email: EmailStr
     created_at: datetime
 
     class Config:
         orm_mode = True
 
+
 class UserLogin(BaseModel):
     id: int
     email: EmailStr
     password: str
+
 
 class UserCreate(BaseModel):
     email: EmailStr
@@ -24,8 +27,10 @@ class NoteBase(BaseModel):
     title: str
     content: str
 
+
 class NoteCreate(NoteBase):
     pass
+
 
 class Note(NoteBase):
     id: int
@@ -36,9 +41,15 @@ class Note(NoteBase):
     class Config:
         orm_mode = True
 
+
 class Token(BaseModel):
     access_token: str
     token_type: str
 
+
 class TokenData(BaseModel):
     id: Optional[str]
+
+
+class EmailSchema(BaseModel):
+    email: EmailStr
