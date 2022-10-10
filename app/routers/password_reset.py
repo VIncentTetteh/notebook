@@ -1,13 +1,12 @@
-from operator import mod
-from os import access
 from fastapi import APIRouter, Depends, HTTPException,status
-from .. import schemas, database, models, oauth2, send_email, utils
+from .. import database, models, oauth2, send_email, utils
 from sqlalchemy.orm import Session
+from ..schema import password_reset_schema,password_update_schema
 
 router = APIRouter(prefix="/password", tags=["Password Reset"])
 
 @router.post("/",response_description="Password Reset", status_code=status.HTTP_201_CREATED)
-async def password_reset(user_email:schemas.PasswordReset, db: Session = Depends(database.get_db)):
+async def password_reset(user_email:password_reset_schema.PasswordReset, db: Session = Depends(database.get_db)):
     email = user_email.dict()
     user = db.query(models.User).filter(models.User.email == email["email"]).first()
 
@@ -26,7 +25,7 @@ async def password_reset(user_email:schemas.PasswordReset, db: Session = Depends
 
 
 @router.put("/reset", response_description="Password reset")
-def password_upate(new_password:schemas.PasswordUpdate ,db: Session = Depends(database.get_db), current_user: int = Depends(oauth2.get_current_user)):
+def password_upate(new_password:password_update_schema.PasswordUpdate ,db: Session = Depends(database.get_db), current_user: int = Depends(oauth2.get_current_user)):
     user_query = db.query(models.User).filter(models.User.id == current_user.id)
     user = user_query.first()
     request_data = {k:v for k,v in new_password.dict().items() if v is not None}

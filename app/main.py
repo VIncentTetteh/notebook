@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from . import models
-from .config import settings
 from .routers import user,auth, notes,password_reset
 from .database import engine
 

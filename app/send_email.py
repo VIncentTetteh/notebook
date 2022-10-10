@@ -1,7 +1,7 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from pathlib import Path
-from .schemas import EmailSchema
 from .config import settings
+from .schema import email_schema
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -19,7 +19,7 @@ conf = ConnectionConfig(
 )
 
 
-async def send_registration_mail(subject: str, email_to: EmailSchema, body: dict):
+async def send_registration_mail(subject: str, email_to: email_schema.EmailSchema, body: dict):
     message = MessageSchema(
         subject=subject,
         recipients=[email_to],
@@ -30,7 +30,7 @@ async def send_registration_mail(subject: str, email_to: EmailSchema, body: dict
     fm = FastMail(conf)
     await fm.send_message(message=message, template_name="email.html")
 
-async def send_reset_password_mail(subject: str, email_to: EmailSchema, body: dict):
+async def send_reset_password_mail(subject: str, email_to: email_schema.EmailSchema, body: dict):
     message = MessageSchema(
         subject=subject,
         recipients=[email_to],
