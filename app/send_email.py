@@ -29,3 +29,14 @@ async def send_registration_mail(subject: str, email_to: EmailSchema, body: dict
 
     fm = FastMail(conf)
     await fm.send_message(message=message, template_name="email.html")
+
+async def send_reset_password_mail(subject: str, email_to: EmailSchema, body: dict):
+    message = MessageSchema(
+        subject=subject,
+        recipients=[email_to],
+        template_body=body,
+        subtype="html"
+    )
+
+    fm = FastMail(conf)
+    await fm.send_message(message=message, template_name="password_reset.html")
