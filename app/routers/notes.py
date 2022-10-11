@@ -1,10 +1,6 @@
-from http.client import HTTPException
-from operator import contains
-from pyexpat import model
-from turtle import title
 from typing import List, Optional
 from .. import database, models, oauth2
-from fastapi import APIRouter,status, Depends
+from fastapi import APIRouter,status, Depends, HTTPException
 from sqlalchemy.orm import Session
 from ..schema import note_schema, note_create_schema
 
@@ -24,12 +20,15 @@ def get_notes(db:Session = Depends(database.get_db), current_user: int = Depends
     notes = db.query(models.Note).filter(models.Note.owner_id == current_user.id).filter(models.Note.title.contains(search)).limit(limit).all()
     return notes
 
-@router.get("/{id}", response_model=note_schema.Note)
+@router.get("/{id}", response_model=note_schema.Note, status_code=status.HTTP_404_NOT_FOUND)
 def get_note(id:int, db: Session = Depends(database.get_db), current_user: int = Depends(oauth2.get_current_user)):
     note = db.query(models.Note).filter(models.Note.owner_id == current_user.id).filter(models.Note.id == id).first()
+
     if not note:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"note with id {id} dont exist")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"note with id {id} does not exist")
+
     return note
+
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_note(id:int, db:Session = Depends(database.get_db), current_user:int = Depends(oauth2.get_current_user)):
@@ -55,6 +54,20 @@ def update_note(id:int, note:note_create_schema.NoteCreate,db:Session = Depends(
     db.commit()
     return note_query.first()
 
+@router.patch("/{id}",response_model=note_schema.Note)
+def patch_note(id:int,note:note_create_schema.NoteCreate, db:Session = Depends(database.get_db), current_user:int = Depends(oauth2.get_current_user)):
+    note_query = db.query(models.Note).filter(models.Note.id == id)
+    note_to_patch = note_query.first()
+    if not note_to_patch:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f" note with id {id} does not exist")
+
+    if note_to_patch.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail=f"unauthorized access")
+        
+    note_data = note.dict(exclude_unset=True)
+    note_query.update(note_data,synchronize_session=False)
+    db.commit()
+    return note_query.first()
 
 
 

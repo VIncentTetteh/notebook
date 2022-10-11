@@ -1,5 +1,6 @@
+from typing import Union
 from pydantic import BaseModel
 
 class NoteBase(BaseModel):
-    title: str
-    content: str
+    title: Union[str,None]
+    content: Union[str,None]

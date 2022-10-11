@@ -1,1 +1,5 @@
 Notebook Backend App
+Backend=FastApi
+Test=pytest = Not yet implemented 
+CI = github Actions - Not yet implemented
+CD = AWS ECS - Not yet implemented, needed to create new AWS account 
