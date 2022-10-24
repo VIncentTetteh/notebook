@@ -35,6 +35,6 @@ jobs:
     #Task for linting with black
     - name: Lint with black
       run: |
-        # Code formatting with black, check every python file in the src directory 
-        black src
-        black --check src
+        # Code formatting with black, check every python file in the app directory 
+        black app
+        black --check app
