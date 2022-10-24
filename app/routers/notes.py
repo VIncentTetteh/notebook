@@ -69,6 +69,21 @@ def patch_note(id:int,note:note_create_schema.NoteCreate, db:Session = Depends(d
     db.commit()
     return note_query.first()
 
+@router.patch("/{id}", response_model=note_schema.Note)
+def set_favourite(id:int, note:note_create_schema.NoteCreate, db:Session = Depends(database.get_db), current_user:int = Depends(oauth2.get_current_user)):
+    note_query = db.query(models.Note).filter(models.Note.id == id)
+    note_to_patch = note_query.first()
+    if not note_to_patch:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"note with id {id} does not exist")
+
+    if note_to_patch.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"note not found")
+
+    note_data = note.dict(exclude_unset=True)
+    note_query.update(note_data, synchronize_session=False)
+    db.commit()
+    return note_query.first()
+
 
 
 
