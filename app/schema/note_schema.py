@@ -7,6 +7,7 @@ class Note(NoteBase):
     id: int
     created_at: datetime
     owner_id: int
+    favourite: int
     owner: User
 
     class Config:

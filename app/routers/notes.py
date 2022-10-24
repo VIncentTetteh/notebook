@@ -62,7 +62,7 @@ def patch_note(id:int,note:note_create_schema.NoteCreate, db:Session = Depends(d
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f" note with id {id} does not exist")
 
     if note_to_patch.owner_id != current_user.id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail=f"unauthorized access")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail=f"note not found")
         
     note_data = note.dict(exclude_unset=True)
     note_query.update(note_data,synchronize_session=False)
