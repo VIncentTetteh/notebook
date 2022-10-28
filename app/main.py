@@ -3,6 +3,7 @@ from . import models
 from .routers import user,auth, notes,password_reset
 from .database import engine
 
+
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Notebook App", version=0.1)
