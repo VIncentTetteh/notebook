@@ -16,4 +16,4 @@ app.include_router(password_reset.router)
 
 @app.get("/")
 def default():
-    return {"message":"hello world"}
+    return {"message":"Welcome to the notebook app"}
