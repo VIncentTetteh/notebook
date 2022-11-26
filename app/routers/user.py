@@ -1,9 +1,9 @@
 from pathlib import Path
 from fastapi import File, UploadFile, status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
-from .. import models, utils, send_email, oauth2
-from ..database import get_db
-from ..schema import user_create_schema,user_schema
+from app import models, utils, send_email, oauth2
+from app.database import get_db
+from app.schema import user_create_schema,user_schema
 
 router = APIRouter(prefix="/users", tags=["Users"])
 BASE_DIR = Path(__file__).resolve().parent.parent

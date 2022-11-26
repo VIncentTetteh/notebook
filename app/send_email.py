@@ -1,17 +1,17 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from pathlib import Path
-from .config import settings
-from .schema import email_schema
+from app import config
+from app.schema import email_schema
 
 BASE_DIR = Path(__file__).resolve().parent
 
 conf = ConnectionConfig(
-    MAIL_USERNAME=settings.mail_username,
-    MAIL_PASSWORD=settings.mail_password,
-    MAIL_FROM=settings.mail_from,
-    MAIL_PORT=settings.mail_port,
-    MAIL_SERVER=settings.mail_server,
-    MAIL_FROM_NAME=settings.mail_from_name,
+    MAIL_USERNAME=config.settings.mail_username,
+    MAIL_PASSWORD=config.settings.mail_password,
+    MAIL_FROM=config.settings.mail_from,
+    MAIL_PORT=config.settings.mail_port,
+    MAIL_SERVER=config.settings.mail_server,
+    MAIL_FROM_NAME=config.settings.mail_from_name,
     MAIL_TLS=True,
     MAIL_SSL=False,
     USE_CREDENTIALS=True,
