@@ -62,13 +62,13 @@ jobs:
         with:
           name: notebook
       - name: Upload to S3
-        run: aws s3 cp api.zip s3://fastapi123718237193712983/notebook.zip
+        run: aws s3 cp api.zip s3://notebook-app-s3/notebook.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: Deploy new Lambda
-        run: aws lambda update-function-code --function-name fastapi --s3-bucket fastapi123718237193712983 --s3-key notebook.zip
+        run: aws lambda update-function-code --function-name fastapi --s3-bucket notebook-app-s3 --s3-key notebook.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
