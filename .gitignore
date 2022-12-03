@@ -6,4 +6,5 @@ alembic.ini
 alembic/
 .pytest_cache/
 .deta
+env
 
